@@ -50,3 +50,8 @@ pgdata/
 logs/
 *.log
 metrics/
+
+# Ignorar arquivos de configuração de ferramentas de análise
+.clj-kondo/
+*.lisp
+
