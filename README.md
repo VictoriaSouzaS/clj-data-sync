@@ -170,9 +170,9 @@ locust -f pedidos_locust.py
 
 - [x] Serviço base com Docker
 - [x] Integração com PostgreSQL
-- [x] Produção e consumo Kafka
-- [x] CRUD de clientes com enriquecimento
-- [x] Agregador de eventos com API
+- [ ] Produção e consumo Kafka
+- [ ] CRUD de clientes com enriquecimento
+- [ ] Agregador de eventos com API
 - [ ] Locust para testes de carga
 - [ ] Reprocessamento de eventos
 - [ ] Event Store com idempotência
@@ -186,7 +186,6 @@ locust -f pedidos_locust.py
 - [Kafka Streams + Clojure](https://github.com/FundingCircle/jackdaw)
 - [next.jdbc](https://cljdoc.org/d/seancorfield/next.jdbc)
 - [Clojure Spec](https://clojure.org/guides/spec)
-- [Metosin Stack](https://metosin.fi/)
 
 ---
 
