@@ -1,11 +1,11 @@
-(ns servico_pedidos.domain.pedido)
+(ns servico-pedidos.domain.pedido)
 
 (defrecord Pedido [id cliente-id valor status])
 
-(defn validar-pedido [pedido]
-  (and (:id pedido) (:cliente-d pedido) (:valor pedido)))
+(defn pedido-valido? [{:keys [id cliente-id valor]}]
+  (and id cliente-id valor))
 
-(defn criar-pedido [pedido]
-  (if (validar-pedido pedido)
-    (assoc pedido :status "criado")
-    (throw (ex-info "Pedido inválido" {:pedido pedido}))))
+(defn criar-pedido [dados]
+  (if (pedido-valido? dados)
+    (map->Pedido (assoc dados :status "criado"))
+    (throw (ex-info "Pedido inválido" {:pedido dados}))))
