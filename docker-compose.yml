@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - cljnet
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - cljnet
+
+  postgres-pedidos:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: pedidos_user
+      POSTGRES_PASSWORD: pedidos_pass
+      POSTGRES_DB: pedidos_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata-pedidos:/var/lib/postgresql/data
+    networks:
+      - cljnet
+
+  servico-pedidos:
+    build:
+      context: ./servico-pedidos
+    depends_on:
+      - kafka
+      - postgres-pedidos
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - DB_HOST=postgres-pedidos
+      - DB_NAME=pedidos_db
+      - DB_USER=pedidos_user
+      - DB_PASS=pedidos_pass
+    ports:
+      - "3000:3000"
+    networks:
+      - cljnet
+
+networks:
+  cljnet:
+
+
+volumes:
+  pgdata-pedidos:

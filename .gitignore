@@ -1,0 +1,52 @@
+# Ignorar arquivos do Clojure
+target/
+.out/
+*.class
+*.jar
+*.cljs
+*.swp
+.idea/
+.vscode/
+*.log
+
+# Ignorar dependências do Clojure
+# Dependências do deps.edn podem ser baixadas novamente, então não é necessário rastrear no Git
+lib/
+deps.edn.cache
+
+# Ignorar arquivos de configurações de IDE
+.idea/
+.vscode/
+*.iml
+
+# Ignorar arquivos de Docker
+**/docker-compose.override.yml
+.docker/
+docker-compose.override.yml
+
+# Ignorar arquivos temporários de sistema
+*.swp
+*.swo
+.DS_Store
+
+# Ignorar arquivos de build de Kafka
+*.log
+kafka/
+zookeeper/
+
+# Ignorar configurações específicas de ambientes locais
+config.edn
+
+# Ignorar arquivos do PostgreSQL
+pgdata/
+*.sql
+*.db
+
+# Ignorar arquivos do Locust
+*.locust
+*.csv
+
+# Ignorar logs e arquivos de métricas
+logs/
+*.log
+metrics/
