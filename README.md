@@ -27,8 +27,8 @@ Sistema distribuído com microserviços em Clojure para sincronização e enriqu
 | Build/Run      | Docker + docker-compose           | Ambientes isolados para cada serviço        |
 | Logging        | [Timbre](https://github.com/taoensso/timbre) | Log estruturado                   |
 | Validação      | `clojure.spec` ou [malli](https://github.com/metosin/malli) | Validação de dados               |
-| Carga (extra)  | [Locust](https://locust.io)       | Testes de carga (opcional)                  |
-| Métricas (extra)| Prometheus + Grafana (opcional)  | Observabilidade                             |
+| Carga (extra)  | [Locust](https://locust.io)       | Testes de carga                 |
+| Métricas (extra)| Prometheus + Grafana  | Observabilidade                             |
 
 ---
 
