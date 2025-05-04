@@ -39,7 +39,8 @@ Cada serviço segue a arquitetura hexagonal:
 ```
 clj-data-sync/
 ├── src/
-│   ├── servico_pedidos/
+│   ├── servico_pedidos/           # Lógica de negócio e integrações do serviço de pedidos
+│   │   ├── core.clj               # Lógica central do serviço de pedidos
 │   │   ├── domain/                # Lógica de domínio (regra de negócios)
 │   │   │   └── pedido.clj         # Definição da entidade Pedido
 │   │   ├── ports/                 # Interfaces (para DB, Kafka, etc.)
@@ -52,7 +53,8 @@ clj-data-sync/
 │   │   │   └── http/              # API REST para interagir com o serviço
 │   │   │       └── pedido-api.clj
 │   │   └── app.clj                # Wire-up e execução do app
-│   ├── servico_clientes/
+│   ├── servico_clientes/          # Lógica de negócio e integrações do serviço de clientes
+│   │   ├── core.clj               # Lógica central do serviço de clientes
 │   │   ├── domain/                # Lógica de domínio (cliente)
 │   │   │   └── cliente.clj        # Definição da entidade Cliente
 │   │   ├── ports/                 # Interfaces (para DB, Kafka, etc.)
@@ -65,9 +67,10 @@ clj-data-sync/
 │   │   │   └── http/              # API REST para interagir com o serviço
 │   │   │       └── cliente-api.clj
 │   │   └── app.clj                # Wire-up e execução do app
-│   ├── servico_reports/
+│   ├── servico_reports/           # Agregação de dados e visualizações
+│   │   ├── core.clj               # Lógica central do serviço de relatórios
 │   │   ├── domain/                # Lógica de agregação (ex: visão dos pedidos)
-│   │   │   └── reports.clj      # Definição da entidade de agregação
+│   │   │   └── reports.clj        # Definição da entidade de agregação
 │   │   ├── ports/                 # Interfaces para agregações e visualizações
 │   │   │   └── reports-port.clj
 │   │   ├── adapters/              # Implementações específicas de agregação
@@ -78,7 +81,7 @@ clj-data-sync/
 │   │   │   └── http/              # API REST para expor as visualizações
 │   │   │       └── reports-api.clj
 │   │   └── app.clj                # Wire-up e execução do app
-│   ├── servico_monitoramento/     # (Opcional) Monitoramento, healthchecks e métricas
+│   ├── servico_monitoramento/     # Monitoramento, healthchecks e métricas
 │   │   └── monitoramento.clj      # Healthcheck e métricas simples
 │   └── config/                    # Configuração global do sistema
 │       └── config.edn             # Configurações por ambiente (e.g., Kafka, DB)
@@ -97,7 +100,7 @@ clj-data-sync/
 │   │   │   └── cliente-integration-test.clj
 │   ├── servico_reports/           # Testes do serviço agregador
 │   │   ├── domain/                # Testes de agregação
-│   │   │   └── reports-test.clj # Testes de unidade de agregação
+│   │   │   └── reports-test.clj   # Testes de unidade de agregação
 │   │   ├── integration/           # Testes de integração
 │   │   │   └── reports-integration-test.clj
 │   └── common/                    # Testes comuns para toda a aplicação
@@ -120,7 +123,7 @@ clj-data-sync/
 | `servico-pedidos`   | Recebe pedidos via REST, salva no banco e publica evento no Kafka        |
 | `servico-clientes`  | CRUD de clientes, escuta eventos de pedidos, cruza com dados internos    |
 | `servico-reports`   | Escuta múltiplos tópicos, monta views agregadas, expõe por REST          |
-| `servico-monitoramento` | (opcional) Healthchecks e métricas via Prometheus (future)           |
+| `servico-monitoramento` | Healthchecks e métricas via Prometheus                               |
 
 ---
 

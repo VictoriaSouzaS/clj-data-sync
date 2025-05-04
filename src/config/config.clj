@@ -1,0 +1,30 @@
+(ns config.db
+  (:require [environ.core :refer [env]]))
+
+;; Definindo o ambiente atual
+(def env (System/getenv "APP_ENV" "dev"))
+
+;; Configurações de banco de dados para cada ambiente - mantendo em um arquivo devido fins de estudo apenas
+(def db-spec
+  (case env
+    "prod" {:dbtype   "postgresql"
+            :host     (env :db-host-prod)
+            :port     (Integer/parseInt (or (env :db-port-prod) "5432"))
+            :dbname   (env :db-name-prod)
+            :user     (env :db-user-prod)
+            :password (env :db-password-prod)}
+    "staging" {:dbtype   "postgresql"
+               :host     (env :db-host-staging)
+               :port     (Integer/parseInt (or (env :db-port-staging) "5432"))
+               :dbname   (env :db-name-staging)
+               :user     (env :db-user-staging)
+               :password (env :db-password-staging)}
+    ;; Ambiente de desenvolvimento padrão
+    {:dbtype   "postgresql"
+     :host     (env :db-host-dev)
+     :port     (Integer/parseInt (or (env :db-port-dev) "5432"))
+     :dbname   (env :db-name-dev)
+     :user     (env :db-user-dev)
+     :password (env :db-password-dev)}))
+
+(def db-config db-spec)
