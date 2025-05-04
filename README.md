@@ -127,6 +127,30 @@ clj-data-sync/
 
 ---
 
+## Configuração de Banco de Dados
+
+O projeto usa o `environ` para carregar as variáveis de ambiente para configurar os parâmetros de conexão do banco de dados. O arquivo `config.clj` contém a lógica para se conectar ao banco de dados dependendo do ambiente (`dev`, `staging`, `prod`).
+
+### Configurações por Ambiente
+
+O ambiente é definido pela variável de ambiente `APP_ENV`. Os seguintes ambientes são suportados:
+
+- **dev**: Ambiente de desenvolvimento (padrão se `APP_ENV` não for definido).
+- **staging**: Ambiente de staging.
+- **prod**: Ambiente de produção.
+
+### Como configurar
+
+1. Crie um arquivo `.env` na raiz do projeto com as variáveis de ambiente correspondentes.
+2. As variáveis de ambiente para o banco de dados devem ser definidas para cada ambiente.
+3. Para definir o ambiente, configure a variável de ambiente `APP_ENV`. Exemplo:
+
+```bash
+export APP_ENV=prod
+```
+
+4. Quando o projeto for iniciado, ele irá automaticamente carregar as variáveis apropriadas de acordo com o ambiente configurado.
+
 ## 🚀 Como Rodar
 
 ```bash
