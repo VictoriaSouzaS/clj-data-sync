@@ -21,6 +21,8 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - cljnet
@@ -40,18 +42,25 @@ services:
 
   servico-pedidos:
     build:
-      context: ./servico-pedidos
+      context: .
+      dockerfile: docker/Dockerfile
     depends_on:
       - kafka
-      - postgres-pedidos
     environment:
-      - KAFKA_BROKER=kafka:9092
-      - DB_HOST=postgres-pedidos
-      - DB_NAME=pedidos_db
-      - DB_USER=pedidos_user
-      - DB_PASS=pedidos_pass
-    ports:
-      - "3000:3000"
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - MAIN_NS=servico-pedidos.core
+    networks:
+      - cljnet
+
+  servico-clientes:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - MAIN_NS=servico-clientes.core
     networks:
       - cljnet
 

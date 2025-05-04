@@ -1,12 +1,13 @@
 (ns servico_pedidos.adapters.db.pedido-db
   (:require [next.jdbc :as jdbc]
+            [config.db :refer [db-spec]]
             [servico_pedidos.ports.pedido-port :as port]))
 
 (def db-spec {:dbtype "postgresql"
-              :host "localhost"
-              :dbname "pedidos_db"
-              :user "user"
-              :password "password"})
+              :host (env :DB_HOST)
+              :dbname (env :DB_NAME)
+              :user (env :DB_USER)
+              :password (env :DB_PASSWORD)})
 
 (defrecord PedidoDBAdapter []
 
