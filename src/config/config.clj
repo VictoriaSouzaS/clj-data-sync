@@ -1,8 +1,10 @@
-(ns config.db
-  (:require [environ.core :refer [env]]))
-
-;; Definindo o ambiente atual
-(def env (System/getenv "APP_ENV" "dev"))
+(ns config.config
+  (:require [clojure.java.io :as io]
+            [clojure.edn :as edn]
+            [clojure.string :as str]
+            [environ.core :refer [env]]
+            [next.jdbc :as jdbc]
+            [next.jdbc.result-set :as rs]))
 
 ;; Configurações de banco de dados para cada ambiente - mantendo em um arquivo devido fins de estudo apenas
 (def db-spec

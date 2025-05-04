@@ -56,4 +56,5 @@ metrics/
 *.lisp
 
 .env
+.cpcache/
 

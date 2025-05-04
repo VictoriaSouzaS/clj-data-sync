@@ -1,4 +1,4 @@
-(ns servico-pedidos.core
+(ns servico_pedidos.core
   (:require [jackdaw.client :as kafka]
             [jackdaw.serdes.json :as json])
   (:gen-class))

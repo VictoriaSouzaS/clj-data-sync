@@ -1,4 +1,4 @@
-(ns servico-pedidos.domain.pedido)
+(ns servico_pedidos.domain.pedido)
 
 (defrecord Pedido [id cliente-id valor status])
 
