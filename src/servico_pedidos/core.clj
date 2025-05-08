@@ -1,7 +1,7 @@
 (ns servico-pedidos.core
   (:require [jackdaw.client :as kafka]
             [jackdaw.serdes.json :as json]
-            [config.config :refer [config]]))
+            [config.config :refer [db-config kafka-config]]))
 
 (defn criar-produtor []
   {"bootstrap.servers" (:bootstrap-servers (:kafka config))})
@@ -18,9 +18,9 @@
    :itens [{:produto "Livro" :quantidade 1}]})
 
 (defn -main [& _]
-  (let [config (criar-produtor)
+  (let [produtor-config (criar-produtor)   ; Renomeado para evitar conflito com 'config'
         topico (criar-topico)]
-    (with-open [produtor (kafka/producer config)]
+    (with-open [produtor (kafka/producer produtor-config)]
       (println "🚀 Enviando pedido...")
       (let [pedido (gerar-pedido)
             registro {:topic-name (:topic-name topico)

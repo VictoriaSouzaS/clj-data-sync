@@ -1,14 +1,13 @@
 (ns config.config
   (:require [clojure.java.io :as io]
             [clojure.edn :as edn]
-            [clojure.string :as str]
             [environ.core :refer [env]]
             [next.jdbc :as jdbc]
             [next.jdbc.result-set :as rs]))
 
-;; Configurações de banco de dados para cada ambiente - mantendo em um arquivo devido fins de estudo apenas
+;; Configurações de banco de dados para cada ambiente - mantendo em um arquivo devido a fins de estudo apenas
 (def db-spec
-  (case env
+  (case (env :app-env)
     "prod" {:dbtype   "postgresql"
             :host     (env :db-host-prod)
             :port     (Integer/parseInt (or (env :db-port-prod) "5432"))
@@ -31,7 +30,12 @@
 
 (def db-config db-spec)
 
-
+;; Configurações do Kafka
 (def kafka-config
   {:bootstrap-servers (env :kafka-bootstrap-servers)
    :pedido-topic      (env :kafka-pedido-topic)})
+
+;; Função para retornar a configuração
+(def config
+  {:db db-config
+   :kafka kafka-config})

@@ -20,7 +20,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092  # Altere para localhost se necessário
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092 # Altere para localhost se necessário
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -37,13 +37,14 @@ services:
       - "5432:5432"
     volumes:
       - pgdata-pedidos:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
     networks:
       - cljnet
 
   servico-pedidos:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     depends_on:
       - kafka
     environment:
@@ -58,7 +59,7 @@ services:
   servico-clientes:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     depends_on:
       - kafka
     environment:
@@ -72,6 +73,7 @@ services:
 
 networks:
   cljnet:
+
 
 volumes:
   pgdata-pedidos:
