@@ -1,4 +1,4 @@
-(ns servico_pedidos.app
+(ns servico-pedidos.app
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [servico_pedidos.adapters.http.pedido-api :as api]))
 

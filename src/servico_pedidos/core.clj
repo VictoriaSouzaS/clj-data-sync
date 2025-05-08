@@ -1,13 +1,13 @@
-(ns servico_pedidos.core
+(ns servico-pedidos.core
   (:require [jackdaw.client :as kafka]
-            [jackdaw.serdes.json :as json])
-  (:gen-class))
+            [jackdaw.serdes.json :as json]
+            [config.config :refer [config]]))
 
 (defn criar-produtor []
-  {"bootstrap.servers" (or (System/getenv "KAFKA_BOOTSTRAP_SERVERS") "localhost:9092")})
+  {"bootstrap.servers" (:bootstrap-servers (:kafka config))})
 
 (defn criar-topico []
-  {:topic-name "pedido-criado"
+  {:topic-name (:pedido-topic (:kafka config)) ; Usando a configuração do tópico
    :key-serde (json/serde)
    :value-serde (json/serde)})
 

@@ -1,18 +1,24 @@
-{:paths ["src" "config"]
- :deps  {org.clojure/clojure           {:mvn/version "1.11.1"}
-         metosin/reitit                {:mvn/version "0.8.0"}
-         metosin/muuntaja              {:mvn/version "0.6.8"}
-         metosin/reitit-swagger        {:mvn/version "0.7.0-alpha7"}
-         com.taoensso/timbre           {:mvn/version "6.1.0"}
-         org.postgresql/postgresql     {:mvn/version "42.3.3"}
-         seancorfield/next.jdbc        {:mvn/version "1.2.659"}
-         metosin/reitit-ring           {:mvn/version "0.8.0"}
-         fi.metosin/reitit-openapi     {:mvn/version "0.8.0"}
-         fi.metosin/reitit-swagger-ui  {:mvn/version "0.7.0-alpha6"}
-         environ/environ               {:mvn/version "1.2.0"}
-         ring/ring-jetty-adapter       {:mvn/version "1.9.0"}
-         ring/ring-core                {:mvn/version "1.9.0"}
-         ring-middleware-format/ring-middleware-format   {:mvn/version "0.7.5"}}
+{:paths ["src"]
+ :deps  {org.clojure/clojure                    {:mvn/version "1.11.1"}
+         metosin/reitit                         {:mvn/version "0.8.0"}
+         metosin/muuntaja                       {:mvn/version "0.6.8"}
+         metosin/reitit-swagger                 {:mvn/version "0.7.0-alpha7"}
+         com.taoensso/timbre                    {:mvn/version "6.1.0"}
+         org.postgresql/postgresql              {:mvn/version "42.3.3"}
+         seancorfield/next.jdbc                 {:mvn/version "1.2.659"}
+         metosin/reitit-ring                    {:mvn/version "0.8.0"}
+         fi.metosin/reitit-openapi              {:mvn/version "0.8.0"}
+         fi.metosin/reitit-swagger-ui           {:mvn/version "0.7.0-alpha6"}
+         environ/environ                        {:mvn/version "1.2.0"}
+         ring/ring-jetty-adapter                {:mvn/version "1.9.0"}
+         ring/ring-core                         {:mvn/version "1.9.0"}
+         ring-middleware-format/ring-middleware-format {:mvn/version "0.7.5"}
+         org.apache.kafka/kafka-clients         {:mvn/version "3.7.0"}
+         fundingcircle/jackdaw                  {:mvn/version "0.6.4"}
+         io.confluent/kafka-json-schema-serializer {:mvn/version "7.3.2"}
+         org.slf4j/slf4j-simple                 {:mvn/version "1.7.32"}
+         org.apache.kafka/kafka-streams         {:mvn/version "3.4.0"}}
  :main-opts ["-m" "servico-pedidos.app"]
  :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}
-             "clojars" {:url "https://repo.clojars.org/"}}}
+             "clojars" {:url "https://repo.clojars.org/"}
+             "confluent" {:url "https://packages.confluent.io/maven/"}}}

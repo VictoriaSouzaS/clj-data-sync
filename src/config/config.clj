@@ -30,3 +30,8 @@
      :password (env :db-password-dev)}))
 
 (def db-config db-spec)
+
+
+(def kafka-config
+  {:bootstrap-servers (env :kafka-bootstrap-servers)
+   :pedido-topic      (env :kafka-pedido-topic)})

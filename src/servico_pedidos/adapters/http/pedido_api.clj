@@ -2,24 +2,26 @@
   (:require [reitit.ring :as ring]
             [reitit.swagger :as swagger]
             [reitit.swagger-ui :as swagger-ui]
-            [ring.middleware.format :as middleware]
+            [ring.middleware.format :refer [wrap-restful-format]]
+            [ring.adapter.jetty :refer [run-jetty]]
             [servico_pedidos.domain.pedido :as service]
-            [servico_pedidos.adapters.db.pedido-db :as db]
-            [servico_pedidos.adapters.kafka.pedido-kafka :as kafka]))
+            [servico_pedidos.adapters.db.pedido-db :refer [->PedidoDBAdapter]]
+            [servico_pedidos.ports.pedido-port :as port]))
 
 (def app-routes
-  (ring/router
-   [["/swagger.json" {:get (swagger/create-swagger-handler)}]  ;; Rota que serve o swagger.json
-    ["/swagger-ui" {:get (swagger-ui/create-swagger-ui-handler {:url "/swagger.json"})}]  ;; Swagger UI
-    ["/pedidos" {:post (fn [{:keys [body]}]
-                         (do
-                           (service/criar-pedido body)
-                           (db/salvar-pedido db/pedido-db-adapter body)
-                           (kafka/enviar-pedido-para-kafka kafka/pedido-kafka-adapter body)
-                           {:status 200 :body {:message "Pedido criado com sucesso"}}))}]]))
+  (let [adapter (->PedidoDBAdapter)]
+    (ring/ring-handler
+     (ring/router
+      [["/swagger.json" {:get (swagger/create-swagger-handler)}]
+       ["/swagger-ui" {:get (swagger-ui/create-swagger-ui-handler {:url "/swagger.json"})}]
+       ["/pedidos" {:post (fn [{:keys [body]}]
+                            (let [pedido (service/criar-pedido body)]
+                              (port/salvar-pedido adapter pedido)
+                              (port/enviar-pedido-para-kafka adapter pedido)
+                              {:status 200 :body {:message "Pedido criado com sucesso"}}))}]]))))
 
 (def app
-  (middleware/wrap-json-response (middleware/wrap-json-body app-routes)))
+  (wrap-restful-format app-routes))
 
 (defn -main []
   (run-jetty app {:port 3000}))

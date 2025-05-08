@@ -1,24 +1,26 @@
 (ns servico_pedidos.adapters.db.pedido-db
   (:require [next.jdbc :as jdbc]
-            [config.config :refer [db-spec]] ; Importando o db-spec configurado
+            [config.config :refer [db-spec]]
             [servico_pedidos.ports.pedido-port :as port]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [servico_pedidos.adapters.kafka.pedido-kafka :as kafka]))
 
-;; Define APP_ENV ou usa "dev" como padrão se a variável não existir
+;; Definindo o ambiente
 (def app-env (or (env :app-env) "dev"))
 
-
-;; Monta o nome da variável de ambiente com sufixo de ambiente
 (defn env-key [base]
   (keyword (str base "-" app-env)))
 
+;; Definindo o Adapter para o Banco de Dados
 (defrecord PedidoDBAdapter []
-
   port/PedidoPort
   (salvar-pedido [this pedido]
-    (jdbc/execute! db-spec  ; Usando o db-spec importado de config.config
+    (jdbc/execute! db-spec
                    ["INSERT INTO pedidos (id, cliente_id, valor, status) VALUES (?, ?, ?, ?)"
                     (:id pedido) (:cliente-id pedido) (:valor pedido) (:status pedido)]))
 
   (enviar-pedido-para-kafka [this pedido]
-    (println "Enviando pedido para Kafka:" pedido)))
+    (let [producer (kafka/criar-produtor)]
+      ;; Enviar pedido para Kafka
+      (kafka/enviar-pedido! producer pedido)
+      (println "Pedido enviado para Kafka:" pedido))))
