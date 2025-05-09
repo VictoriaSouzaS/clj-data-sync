@@ -1,41 +1,28 @@
 (ns config.config
-  (:require [clojure.java.io :as io]
-            [clojure.edn :as edn]
-            [environ.core :refer [env]]
-            [next.jdbc :as jdbc]
-            [next.jdbc.result-set :as rs]))
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as io]))
 
-;; Configurações de banco de dados para cada ambiente - mantendo em um arquivo devido a fins de estudo apenas
-(def db-spec
-  (case (env :app-env)
-    "prod" {:dbtype   "postgresql"
-            :host     (env :db-host-prod)
-            :port     (Integer/parseInt (or (env :db-port-prod) "5432"))
-            :dbname   (env :db-name-prod)
-            :user     (env :db-user-prod)
-            :password (env :db-password-prod)}
-    "staging" {:dbtype   "postgresql"
-               :host     (env :db-host-staging)
-               :port     (Integer/parseInt (or (env :db-port-staging) "5432"))
-               :dbname   (env :db-name-staging)
-               :user     (env :db-user-staging)
-               :password (env :db-password-staging)}
-    ;; Ambiente de desenvolvimento padrão
-    {:dbtype   "postgresql"
-     :host     (env :db-host-dev)
-     :port     (Integer/parseInt (or (env :db-port-dev) "5432"))
-     :dbname   (env :db-name-dev)
-     :user     (env :db-user-dev)
-     :password (env :db-password-dev)}))
+;; Função para carregar o arquivo de configuração
+(defn load-config []
+  (with-open [r (io/reader (io/resource "config.edn"))]
+    (edn/read r)))
 
-(def db-config db-spec)
+;; Carregar as configurações do arquivo
+(def raw-config (load-config))
 
-;; Configurações do Kafka
-(def kafka-config
-  {:bootstrap-servers (env :kafka-bootstrap-servers)
-   :pedido-topic      (env :kafka-pedido-topic)})
+;; Obter o ambiente (ex: dev, staging, prod) e definir em uma chave global
+(def env (keyword (:env raw-config)))
 
-;; Função para retornar a configuração
+;; Função para obter a configuração de um serviço específico para o ambiente
+(defn config-do-servico [servico]
+  (get raw-config servico))
+
+;; Obter as configurações de DB e Kafka para o ambiente
+(def db-config (get-in raw-config [(:env raw-config) :db]))
+(def kafka-config (get-in raw-config [(:env raw-config) :kafka]))
+
+;; Configuração final para uso geral
 (def config
-  {:db db-config
+  {:env env
+   :db db-config
    :kafka kafka-config})
