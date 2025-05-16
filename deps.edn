@@ -18,7 +18,7 @@
          io.confluent/kafka-json-schema-serializer {:mvn/version "7.3.2"}
          org.slf4j/slf4j-simple                 {:mvn/version "1.7.32"}
          org.apache.kafka/kafka-streams         {:mvn/version "3.4.0"}
-         org.clojure/spec.alpha                 {:mvn/version "0.2.194"}
+         org.clojure/spec.alpha                 {:mvn/version "0.5.238"}
          cheshire/cheshire                      {:mvn/version "5.11.0"}}
  :main-opts ["-m" "servico-pedidos.app"]
  :mvn/repos {"central" {:url "https://repo1.maven.org/maven2/"}

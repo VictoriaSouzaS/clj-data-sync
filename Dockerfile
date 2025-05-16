@@ -14,6 +14,9 @@ FROM clojure:openjdk-17-tools-deps
 WORKDIR /app
 COPY --from=builder /app /app
 
+# Limpe o cache do Maven e baixe as dependências
+RUN rm -rf /root/.m2/repository && \
+    clojure -P
 EXPOSE 3000
 
 # possibilidade de passar o namespace principal de forma dinâmica via uma variável de ambiente chamada MAIN_NS.
