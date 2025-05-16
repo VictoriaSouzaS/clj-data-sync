@@ -4,3 +4,6 @@
 
 (defn -main []
   (run-jetty api/app {:port 3000})) ;; Rodando o servidor na porta 3000
+
+
+;; handler HTTP da aplicação
