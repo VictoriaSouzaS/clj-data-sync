@@ -31,7 +31,7 @@ docker-compose.override.yml
 
 # Ignorar arquivos de build de Kafka
 *.log
-kafka/
+/kafka/
 zookeeper/
 
 # Ignorar configurações específicas de ambientes locais
