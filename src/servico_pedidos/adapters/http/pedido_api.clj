@@ -1,19 +1,21 @@
 (ns servico_pedidos.adapters.http.pedido-api
-  (:require [reitit.ring :as ring]
-            [reitit.swagger :as swagger]
-            [reitit.swagger-ui :as swagger-ui]
-            [ring.middleware.format :refer [wrap-restful-format]]
-            [ring.adapter.jetty :refer [run-jetty]]
-            [servico_pedidos.domain.pedido :as service]
-            [servico_pedidos.adapters.db.pedido-db :refer [->PedidoDBAdapter]]
-            [servico_pedidos.ports.pedido-port :as port]
-            [config.config :refer [config]]))
+  (:require
+   [reitit.ring :as ring]
+   [reitit.swagger :as swagger]
+   [reitit.swagger-ui :as swagger-ui]
+   [ring.middleware.format :refer [wrap-restful-format]]
+   [ring.adapter.jetty :refer [run-jetty]]
+   [servico_pedidos.domain.pedido :as service]
+   [servico_pedidos.controller.pedido-controller :as controller]
+   [servico_pedidos.adapters.db.pedido-db :refer [->PedidoDBAdapter]]
+   [servico_pedidos.adapters.kafka.pedido-kafka :refer [->PedidoKafkaAdapter]]
+   [config.config :refer [config]]))
 
-;; Acessando a configuração do DB e Kafka para o serviço de pedidos
 (def db-config (get-in config [:servico-pedidos :db]))
 (def kafka-config (get-in config [:servico-pedidos :kafka]))
 
-(def adapter (->PedidoDBAdapter))
+(def db-adapter (->PedidoDBAdapter db-config))
+(def kafka-adapter (->PedidoKafkaAdapter kafka-config))
 
 (def app-routes
   (ring/ring-handler
@@ -21,10 +23,11 @@
     [["/swagger.json" {:get (swagger/create-swagger-handler)}]
      ["/swagger-ui" {:get (swagger-ui/create-swagger-ui-handler {:url "/swagger.json"})}]
      ["/pedidos" {:post (fn [{:keys [body]}]
-                          (let [pedido (service/criar-pedido body)]
-                            (port/salvar-pedido adapter pedido)
-                            (port/enviar-pedido-para-kafka adapter pedido)
-                            {:status 200 :body {:message "Pedido criado com sucesso"}}))}]])))
+                          (try
+                            (let [pedido (service/criar-pedido body)]
+                              (controller/processar-pedido db-adapter kafka-adapter pedido))
+                            (catch Exception e
+                              {:status 400 :body {:error "Pedido inválido"}})))}]])))
 
 (def app
   (wrap-restful-format app-routes))
